@@ -1,0 +1,121 @@
+Option Explicit
+
+Sub CopyMultipleToMaster()
+
+Dim FolderPath  As String
+Dim FilePath As String
+Dim SrcWorkbook As Workbook
+Dim DestWorkbook As Workbook
+Dim ShtCount As Integer
+Dim SrcLastRow As Long
+Dim DestLastRow As Long
+Dim i As Integer
+
+
+Set DestWorkbook = ActiveWorkbook
+
+' Open the source work book folder path'
+FolderPath = "C:\Users\Shabs\Documents\SHAB\New folder\REFURB"
+FilePath = Dir(FolderPath & "*.xls*, *.xlsm*")
+
+Do While FilePath <> ""
+  
+  Set SrcWorkbook = Workbooks.Open(FolderPath & FilePath)
+  
+  
+  If SrcWorkbook.Name <> DestWorkbook.Name Then
+       SrcWorkbook.Activate
+       ShtCount = ActiveWorkbook.Sheets.Count
+      
+      For i = 2 To ShtCount
+     
+        Worksheets(i).Activate
+        SrcLastRow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Row
+         
+        Range("A1:C" & SrcLastRow).Select
+         
+        Selection.Copy
+        
+        DestWorkbook.Sheets("Master").Activate
+        DestLastRow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Select
+         
+        'Required after first paste to shift active cell down one
+        Do While Not IsEmpty(ActiveCell)
+        ActiveCell.Offset(1, 0).Select
+        Loop
+       
+        Selection.PasteSpecial
+    
+        Next i
+ 
+    End If
+    
+    FilePath = Dir
+    
+    
+    Loop
+
+
+End Sub
+
+Private Sub Worksheet_Activate()
+
+
+Dim FolderPath  As String
+Dim FilePath As String
+Dim SrcWorkbook As Workbook
+Dim DestWorkbook As Workbook
+Dim ShtCount As Integer
+Dim SrcLastRow As Long
+Dim DestLastRow As Long
+Dim i As Integer
+
+
+
+Set DestWorkbook = ActiveWorkbook
+
+' Open the source work book folder path'
+FolderPath = "C:\Users\Shabs\Documents\SHAB\New folder\REFURB\"
+FilePath = Dir(FolderPath & "*.xls")
+
+Do While FilePath <> ""
+  
+  Set SrcWorkbook = Workbooks.Open(FolderPath & FilePath)
+  
+  
+  If SrcWorkbook.Name <> DestWorkbook.Name Then
+       SrcWorkbook.Activate
+       ShtCount = ActiveWorkbook.Sheets.Count
+      
+      For i = 1 To ShtCount
+     
+        Worksheets(i).Activate
+        'dim Sheet = ""Sheet" & i"""
+        SrcLastRow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Row
+         
+        ActiveSheet.Range("A1:L" & SrcLastRow).Select
+         
+        Selection.Copy
+        
+        DestWorkbook.Sheets("Master").Activate
+        DestLastRow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Select
+         
+        'Required after first paste to shift active cell down one
+        Do While Not IsEmpty(ActiveCell)
+        ActiveCell.Offset(1, 0).Select
+        Loop
+       
+        Selection.PasteSpecial
+        SrcWorkbook.Activate
+        Next i
+ 
+    End If
+    
+    FilePath = Dir
+    
+    
+    Loop
+
+End Sub
+
+
