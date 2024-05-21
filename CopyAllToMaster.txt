@@ -58,6 +58,8 @@ Do While FilePath <> ""
 
 End Sub
 
+----------------------------------------------------------------------------------------------------
+
 Private Sub Worksheet_Activate()
 
 
@@ -117,5 +119,37 @@ Do While FilePath <> ""
     Loop
 
 End Sub
+---------------------------------------------------------------------------------------------------------
 
+Sub ImportFromDifferentWorkbook_ToMaster()
 
+    Dim FolderPath  As String
+    Dim FilePath As String
+    Dim SrcWorkbook As Workbook
+    Dim DestWorkbook As Workbook
+    Dim ShtCount As Integer
+    Dim SrcLastRow As Long
+    Dim DestLastRow As Long
+    
+
+    Set DestWorkbook = ActiveWorkbook
+    
+    ' Open the source work book folder path'
+    FolderPath = "C:\Users\Shabs\Documents\SHAB\New folder\TEST\"
+    FilePath = Dir(FolderPath & "*.xls")
+    
+    Do While FilePath <> ""
+  
+    Set SrcWorkbook = Workbooks.Open(FolderPath & FilePath)
+  
+  
+    If SrcWorkbook.Name <> DestWorkbook.Name Then
+       SrcWorkbook.Worksheets.Copy After:=DestWorkbook.Worksheets("Master")
+       SrcWorkbook.Close SaveChanges:=False
+       
+    End If
+    
+    FilePath = Dir
+    Loop
+
+End Sub
